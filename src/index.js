@@ -15,6 +15,8 @@ function checksExistsUserAccount(request, response, next) {
   const userExists = users.some((user)=>user.username === username)
 
   if(!userExists) return response.status(404).json({error:'user not found'})
+
+  next()
 }
 
 app.post('/users', (request, response) => {
