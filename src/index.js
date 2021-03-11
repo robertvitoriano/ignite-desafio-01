@@ -8,13 +8,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// const users = [];
+ const users = [];
 
 function checksExistsUserAccount(request, response, next) {
   const {username} = request.headers
   const userExists = users.some((user)=>user.username === username)
 
   if(!userExists) return response.status(404).json({error:'user not found'})
+
+  next()
 }
 
 app.post('/users', (request, response) => {
