@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 
-// const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 
@@ -27,9 +27,10 @@ app.post('/users', (request, response) => {
  const user = { 
   name,
   username,
-  todos:[]
+  todos:[],
+  id:uuidv4()
 }
-return response.status(201).json(user)
+  return response.status(201).json(user)
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
