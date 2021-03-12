@@ -20,7 +20,16 @@ function checksExistsUserAccount(request, response, next) {
 }
 
 app.post('/users', (request, response) => {
-  // Complete aqui
+   const {name, username} = request.body
+   if(!(user || username)){
+     return response.status(400).json({error:'All fields must be filled in order to create !'})
+   }
+ const user = { 
+  name,
+  username,
+  todos:[]
+}
+return response.status(201).json(user)
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
