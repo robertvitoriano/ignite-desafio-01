@@ -12,29 +12,45 @@ app.use(express.json());
 
 function checksExistsUserAccount(request, response, next) {
   const {username} = request.headers
-  const userExists = users.some((user)=>user.username === username)
 
-  if(!userExists) return response.status(404).json({error:'user not found'})
+  const user= users.find((user)=>user.username === username)
+
+  if(!user) return response.status(400).json({error:'user not found'})
+  
+  request.user = user
 
   next()
 }
 
 app.post('/users', (request, response) => {
    const {name, username} = request.body
-   if(!(user || username)){
+   if(!(name || username)){
      return response.status(400).json({error:'All fields must be filled in order to create !'})
    }
+ const userAlreadyExists = users.some((user)=> user.username === username)
+
+ if(userAlreadyExists) return response.status(400).json({name,username})
+
  const user = { 
   name,
   username,
   todos:[],
   id:uuidv4()
 }
-  return response.status(201).json(user)
+  users.push(user)
+  return response.status(201).json(
+  { name,
+    username,
+    todos:[]
+  })
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const {user} = request
+ 
+  const todos = user.todos
+
+  return response.status(200).json(todos)
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
